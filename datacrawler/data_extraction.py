@@ -1,7 +1,10 @@
 import pandas as pd
 from utils import unique_list
+import sys
+sys.path.append('/media/ba/N_Vol/ubuntu/Javi-MachineTranslation')
+from config import *
 
-rawdata = pd.read_csv('rawdata.csv')
+rawdata = pd.read_csv(RAW_DATA_PATH)
 rawdata = rawdata.values.tolist()
 identical_name_data =[]
 for i in range(len(rawdata)):
@@ -30,17 +33,16 @@ for items in non_duplicate_lang_flag_data:
     if len(items) ==2:
         data.append(items)
     else:
-        for items in have_some_subs:
-            mmm = []
-            ck_tmp_vi=False
-            ck_tmp_ja=False
-            for item in items:
-                if(item[1]=='ja' and not ck_tmp_ja):
-                    ck_tmp_ja=True
-                    mmm.append(item)
-                if(item[1]=='vi' and not ck_tmp_vi):
-                    ck_tmp_vi=True
-                    mmm.append(item)
+        mmm = []
+        ck_tmp_vi=False
+        ck_tmp_ja=False
+        for item in items:
+            if(item[1]=='ja' and not ck_tmp_ja):
+                ck_tmp_ja=True
+                mmm.append(item)
+            if(item[1]=='vi' and not ck_tmp_vi):
+                ck_tmp_vi=True
+                mmm.append(item)
         data.append(mmm)
 
 data_to_csv = []
@@ -54,6 +56,6 @@ for items in data:
 
 df2 = pd.DataFrame(data_to_csv, columns=['movie_name','ja_release','ja_source','ja_author','vi_release','vi_source','vi_author'])
 
-df2.to_csv('cleaned_data.csv',index=False)
+df2.to_csv(CLEANED_DATA_PATH,index=False)
 
-print('Done! file saved to cleaned_data.csv')
+print('Done! file saved to ',CLEANED_DATA_PATH)

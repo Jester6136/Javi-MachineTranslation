@@ -2,14 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import pandas as pd
 import numpy as np
-
-file_saved = 'data1.csv'
-webdriver_path = 'chromedriver'
+import sys
+sys.path.append('/media/ba/N_Vol/ubuntu/Javi-MachineTranslation')
+from config import *
 
 button_routes = np.arange(0,1001*40,step=40)
 print('Preparing crawing')
 result = []
-driver:webdriver.Chrome = webdriver.Chrome(webdriver_path)
+driver:webdriver.Chrome = webdriver.Chrome(CHROME_DRIVER)
 options = webdriver.ChromeOptions() 
 options.add_argument("--headless")
 options.add_argument("--no-sandbox")
@@ -32,5 +32,5 @@ for button_route in button_routes:
 driver.close()
 print('Crawed')
 df = pd.DataFrame(result, columns=['film_name','flag','time', 'link','uploader'])
-df.to_csv(file_saved,index=False)
-print('saved to ',file_saved)
+df.to_csv(RAW_DATA_PATH,index=False)
+print('saved to ',RAW_DATA_PATH)

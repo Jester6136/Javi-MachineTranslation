@@ -1,3 +1,7 @@
+import sys
+sys.path.append('/media/ba/N_Vol/ubuntu/Javi-MachineTranslation')
+from config import *
+
 import pandas as pd
 from utils import unique_list
 import requests
