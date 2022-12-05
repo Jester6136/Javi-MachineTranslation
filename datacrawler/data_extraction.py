@@ -55,7 +55,7 @@ for items in data:
         data_to_csv.append([items[0][0],items[0][2],items[0][3],items[0][4],items[1][2],items[1][3],items[1][4]])
 
 df2 = pd.DataFrame(data_to_csv, columns=['movie_name','ja_release','ja_source','ja_author','vi_release','vi_source','vi_author'])
-
+df2= df2.drop_duplicates(subset=['movie_name'])
 df2.to_csv(CLEANED_DATA_PATH,index=False)
 
 print('Done! file saved to ',CLEANED_DATA_PATH)
