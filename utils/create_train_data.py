@@ -5,10 +5,10 @@ import os
 import pandas as pd
 from utils import preprocessing
 from sklearn.model_selection import train_test_split
-
+import re
 
 DATA_PATH = 'F:\\ubuntu\\Javi-MachineTranslation\\data'
-
+print('getdata raw...')
 def convert_to_seconds(inputs:str):
     input_split = inputs.split(':')
     hh,mm,ss=input_split[0],input_split[1],input_split[2]
@@ -65,13 +65,30 @@ df = pd.DataFrame(data_format, columns=['vi','ja'])
 df.to_csv('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\javi.csv',index=False)
 
 df = pd.read_csv('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\javi.csv')
-train,test = train_test_split(df, test_size=0.1, random_state=RANDOM_STATE)
-train,val = train_test_split(train,test_size=0.15, random_state=RANDOM_STATE)
-
-with open('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\train.json', 'w', encoding='utf-8') as file:
-    train.to_json(file, force_ascii=False,orient='records',lines=True)
-with open('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\val.json', 'w', encoding='utf-8') as file:
-    val.to_json(file, force_ascii=False,orient='records',lines=True)
-with open('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\test.json', 'w', encoding='utf-8') as file:
-    test.to_json(file, force_ascii=False,orient='records',lines=True)
 print('getdata raw successfully')
+print('preprocessing data....')
+vi = list(df['vi'])
+ja = list(df['ja'])
+preprocessed = []
+for i in range(len(vi)):
+    preprocessed.append([preprocessing(ja[i]),vietnam_preprocessing(preprocessing(vi[i]))])
+
+df2 = pd.DataFrame(preprocessed, columns=['ja','vi'])
+df2_clean = df2.drop_duplicates('vi')
+df2_clean.to_csv("cleaned_javi.csv",index=False)
+print('preprocessing data successfully')
+print('saved to cleaned_javi.csv')
+
+print('make train dataset')
+df2 = pd.read_csv('F:\\ubuntu\\Javi-MachineTranslation\\datacrawler\\cleaned_javi.csv')
+vi = list(df2['vi'])
+ja = list(df2['ja'])
+f1 = open('ja.train','w',encoding='utf8')
+f2 = open('vi.train','w',encoding='utf8')
+for i,item in enumerate(ja):
+    if (len(vi[i])>15):
+        f1.write(str(ja[i])+'\n')
+        f2.write(str(vi[i])+'\n')
+f1.close()
+f2.close()
+print('make train dataset successfully')
